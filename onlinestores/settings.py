@@ -37,6 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # packages
+    'rest_framework.authtoken',  # AUTHTOKEN
+    'rest_framework',  # API
+    'corsheaders',  # CORS
+
+    # apps
+    'shops',
+    'users',
+    
 ]
 
 MIDDLEWARE = [
@@ -47,7 +57,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:8000',
+# )
+
 
 ROOT_URLCONF = 'onlinestores.urls'
 
@@ -68,6 +85,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'onlinestores.wsgi.application'
+
+
+# REST_FRAMEWORK ={
+#     'DEFAULT_AUTHENTICATION_CLASSES':(
+#         'rest_framework.authentication.TokenAuthentication',
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES':(
+#         'rest_framework.permissions.IsAuthenticated',
+#     )
+# }
 
 
 # Database
