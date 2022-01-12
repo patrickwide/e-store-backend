@@ -20,6 +20,8 @@ from .models import Product
 # serializers imports
 from .serializers import ProductSerializer
 
+# permissions imports
+from .permissions import IsOwnerOrReadOnly
 
 # Create your views here.
 class apiOverview(APIView):
@@ -40,14 +42,83 @@ class apiOverview(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class productList(APIView):
+    # prevent unauthenticated users from accessing the data
     authentication_classes = [TokenAuthentication,BasicAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self, req):
         if req.method == "GET":
             
-            products = Product.objects.all()
+            # filter the data and give users data only
+            products = Product.objects.filter(owner=req.user)
             serializer = ProductSerializer(products,many=True)
 
             return Response(data=serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class productDetail(APIView):
+    # prevent unauthenticated users from accessing the data
+    authentication_classes = [TokenAuthentication,BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, req, pk):
+        if req.method == "GET":
+            # get only data by id and also data that is created by the user
+            product = get_object_or_404(Product,id=pk,owner=req.user)
+            serializer = ProductSerializer(product,many=False)
+
+            return Response(data=serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class productCreate(APIView):
+    # prevent unauthenticated users from creating new products
+    authentication_classes = [TokenAuthentication,BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        if req.method == "POST":
+            
+            serializer = ProductSerializer(data=req.data)
+            if serializer.is_valid():
+                serializer.save(owner=req.user)
+
+            return Response(data=serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class productUpdate(APIView):
+    # only if the user created the data is allowed to update
+    authentication_classes = [TokenAuthentication,BasicAuthentication]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    def put(self, req, pk):
+        if req.method == "PUT":
+
+            product = get_object_or_404(Product,id=pk)
+            # check if user have permission to update the data
+            self.check_object_permissions(req, product)
+            serializer = ProductSerializer(instance=product,data=req.data)
+
+
+            if serializer.is_valid():
+                serializer.save()
+
+            return Response(data=serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class productDelete(APIView):
+    # only if the user created the data is allowed to delete
+    authentication_classes = [TokenAuthentication,BasicAuthentication]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    def delete(self, req, pk):
+        if req.method == "DELETE":
+
+            product = get_object_or_404(Product,id=pk)
+            # check if user have permission to delete the data
+            self.check_object_permissions(req, product)
+            product.delete()
+
+            return Response(data={"success":f"product was successfully deleted"},status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
