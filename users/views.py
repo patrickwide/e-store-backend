@@ -14,6 +14,13 @@ from rest_framework import serializers, status
 from rest_framework.authentication import BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+# shops database imports
+from shops.models import Product
+
+# serializers imports
+from .serializers import ProductSerializer
+
+
 # Create your views here.
 class apiOverview(APIView):
     def get(self, req):
@@ -29,5 +36,28 @@ class apiOverview(APIView):
             }
 
             return Response(data=data,status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class productList(APIView):
+    def get(self, req):
+        if req.method == "GET":
+
+            products = Product.objects.all()
+            serializer = ProductSerializer(products,many=True)
+
+            return Response(data=serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class productDetail(APIView):
+    def get(self, req, pk):
+        if req.method == "GET":
+
+            product = get_object_or_404(Product,id=pk)
+            serializer = ProductSerializer(product,many=False)
+
+            return Response(data=serializer.data,status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)

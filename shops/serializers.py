@@ -3,7 +3,6 @@ from rest_framework import serializers
 from .models import Product
 from django.contrib.auth.models import User
 
-
 class ProductSerializer(serializers.ModelSerializer):
     productName = serializers.CharField(max_length=64)
     productDescription = serializers.CharField(max_length=64)
@@ -25,12 +24,9 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-
-
     class Meta:
         model = Product
         fields = '__all__'
-
 
 class UserSerializer(serializers.ModelSerializer):
     snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())
