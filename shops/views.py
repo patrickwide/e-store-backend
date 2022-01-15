@@ -40,8 +40,8 @@ class apiOverview(APIView):
                 'Create':'/product-create/',
                 'Update':'/product-update/<str:pk>/',
                 'Delete':'/product-delete/<str:pk>/',
-                'Login/':'/product-login/',
-                'Register/':'/product-register/',
+                'Login/':'/product-sign-in/',
+                'Register/':'/product-sign-up/',
             }
 
             return Response(data=data,status=status.HTTP_200_OK)
