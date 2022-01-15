@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # This is the api overview page
@@ -10,4 +12,6 @@ urlpatterns = [
     path("product-create/", views.productCreate.as_view(), name="productCreate"),
     path("product-update/<str:pk>/", views.productUpdate.as_view(), name="productUpdate"),
     path("product-delete/<str:pk>/", views.productDelete.as_view(), name="productDelete"),
-]
+    path("product-sign-in/", views.productSignIn.as_view(), name="productSignIn"),
+    path("product-sign-up/", views.productSignUp.as_view(), name="productSignUp"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

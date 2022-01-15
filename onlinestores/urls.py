@@ -22,7 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('shops/', include('shops.urls'), name="shops"),
     path('users/', include('users.urls'), name="users"),
-    path("api-token-auth/", views.obtain_auth_token, name="api-token-auth"),
-    path('api-auth/', include('rest_framework.urls')),
-
+    # path("api-token-auth/", views.obtain_auth_token, name="api-token-auth"),
+    # path('api-auth/', include('rest_framework.urls')),
 ]
