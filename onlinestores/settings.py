@@ -99,6 +99,21 @@ WSGI_APPLICATION = 'onlinestores.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+# 'mysql', 'oracle', 'postgresql', 'sqlite3'
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE':'django.db.backends.mysql',
+#         'NAME':'onlinestores',
+#         'USER':'root',
+#         'PASSWORD':'',
+#         'HOST':'127.0.0.1',
+#         'PORT':''
+#     }
+# }
+
+# Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
     'default': {

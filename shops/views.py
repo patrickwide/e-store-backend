@@ -147,7 +147,6 @@ class productSignIn(ObtainAuthToken):
 class productSignUp(APIView):
     def post(self,req):        
         if req.method == 'POST':
-            print(req.data)
             serializer = SignUpSerializer(data=req.data)
             data = {}
             if serializer.is_valid():
@@ -156,7 +155,8 @@ class productSignUp(APIView):
                 data['email'] = user.email
                 data['username'] = user.username
             else:
-                data = {'Error':'An error occured please check your cridentials and try again.'}
+                data = serializer.errors
+
             return Response(data)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
