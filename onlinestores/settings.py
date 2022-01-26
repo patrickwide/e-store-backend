@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     # apps
     'shops',
     'users',
+        # databese
+        'database'
     
 ]
 

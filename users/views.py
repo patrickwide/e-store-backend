@@ -15,7 +15,7 @@ from rest_framework.authentication import BasicAuthentication, TokenAuthenticati
 from rest_framework.permissions import IsAuthenticated
 
 # shops database imports
-from shops.models import Product
+from database.models import *
 
 # serializers imports
 from .serializers import ProductSerializer
