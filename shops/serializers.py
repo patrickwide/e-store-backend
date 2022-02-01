@@ -5,17 +5,29 @@ from django.contrib.auth.models import User
 
 class ProductSerializer(serializers.ModelSerializer):
     shop = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='shop.shopName')
-    # shop = serializers.CharField( source='shop.shopName' )
-    productOwner = serializers.ReadOnlyField(source='productOwner.username')
-    productName = serializers.CharField( max_length=64 )
-    productPrice = serializers.IntegerField( default=0 )
-    productCategory = serializers.CharField( source='productCategory.productCategoryName' )
-    productDescription = serializers.CharField( max_length=500 )
-    productPhoto1 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 ) 
-    productPhoto2 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
-    productPhoto3 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
-    productPhoto4 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
-    productPhoto5 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
+    # productOwner = serializers.ReadOnlyField(source='productOwner.username')
+    name = serializers.CharField( max_length=64 )
+    price = serializers.IntegerField( default=0 )
+    category = serializers.CharField( source='productCategory.productCategoryName' )
+    description = serializers.CharField( max_length=500 )
+    photo1 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 ) 
+    photo2 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
+    photo3 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
+    photo4 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
+    photo5 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
+
+
+    # shop = serializers.ReadOnlyField( source='Shop.name' )
+    # name = serializers.CharField( max_length=64 )
+    # price = serializers.IntegerField()
+    # category = serializers.ReadOnlyField( source='Category.ProductCategory' )
+    # description = serializers.CharField( max_length=500 )
+    # photo1 = serializers.FileField( max_length=255 ) 
+    # photo2 = serializers.FileField( max_length=255 )
+    # photo3 = serializers.FileField( max_length=255 )
+    # photo4 = serializers.FileField( max_length=255 )
+    # photo5 = serializers.FileField( max_length=255 )
+
 
     # def create(self, validated_data):
     #     """
@@ -28,44 +40,46 @@ class ProductSerializer(serializers.ModelSerializer):
         """
         Update and return an existing `Product` instance, given the validated data.
         """
-        instance.productName = validated_data.get('productName', instance.productName)
-        instance.productPrice = validated_data.get('productPrice', instance.productPrice)
-        instance.productCategory = validated_data.get('productCategory', instance.productCategory)
-        instance.productDescription = validated_data.get('productDescription', instance.productDescription)
-        instance.productPhoto1 = validated_data.get('productPhoto1', instance.productPhoto1)
-        instance.productPhoto2 = validated_data.get('productPhoto2', instance.productPhoto2)
-        instance.productPhoto3 = validated_data.get('productPhoto3', instance.productPhoto3)
-        instance.productPhoto4 = validated_data.get('productPhoto4', instance.productPhoto4)
-        instance.productPhoto5 = validated_data.get('productPhoto5', instance.productPhoto5)
+        instance.name = validated_data.get('name', instance.name)
+        instance.price = validated_data.get('price', instance.price)
+        instance.category = validated_data.get('category', instance.category)
+        instance.description = validated_data.get('description', instance.description)
+        instance.photo1 = validated_data.get('photo1', instance.photo1)
+        instance.photo2 = validated_data.get('photo2', instance.photo2)
+        instance.photo3 = validated_data.get('photo3', instance.photo3)
+        instance.photo4 = validated_data.get('photo4', instance.photo4)
+        instance.photo5 = validated_data.get('photo5', instance.photo5)
         instance.save()
         return instance
 
     class Meta:
         model = Product
-        fields = ['id','shopName','productOwner','productName','productPrice', 'productCategory','productDescription','productPhoto1','productPhoto2','productPhoto3','productPhoto4','productPhoto5']
+        fields = ['id','shop','name','price','category','description','photo1', 'photo2', 'photo3', 'photo4', 'photo5' ]
+
 
 class shopSerializer(serializers.ModelSerializer):
-    shopOwner = serializers.ReadOnlyField( source='shopOwner.username' )
-    shopName = serializers.CharField( max_length=64 )
-    shopProfile = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
+    user = serializers.ReadOnlyField( source='user.username' )
+    name = serializers.CharField( max_length=64 )
+    profile = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
     shopBio = serializers.CharField( max_length=255 )
-    shopLocation = serializers.CharField( max_length=255 )
+    location = serializers.CharField( max_length=255 )
+    rated = serializers.IntegerField()
+
 
     def create(self, validated_data):
         return Shop.objects.create(**validated_data)
     
     def update(self, instance, validated_data):
-        instance.shopName = validated_data.get('shopName', instance.shopName)
-        instance.shopProfile = validated_data.get('shopProfile', instance.shopProfile)
+        instance.name = validated_data.get('name', instance.name)
+        instance.profile = validated_data.get('profile', instance.profile)
         instance.shopBio = validated_data.get('shopBio', instance.shopBio)
-        instance.shopLocation = validated_data.get('shopLocation', instance.shopLocation)
+        instance.location = validated_data.get('location', instance.location)
         instance.save()
         return instance
 
     class Meta:
         model = Shop
         fields = '__all__'
-
 
 class UserSerializer(serializers.ModelSerializer):
     products = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())

@@ -39,9 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # packages
-    'rest_framework.authtoken',  # AUTHTOKEN
-    'rest_framework',  # API
-    'corsheaders',  # CORS
+    'rest_framework.authtoken',
+    'rest_framework',    
+    'corsheaders', 
+    'rest_registration',
 
     # apps
     'shops',
@@ -67,6 +68,19 @@ CORS_ORIGIN_ALLOW_ALL = True
 #     'http://localhost:8000',
 # )
 
+REST_REGISTRATION = {
+    'REGISTER_VERIFICATION_ENABLED': False,
+    'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
+    'RESET_PASSWORD_VERIFICATION_ENABLED': False,
+}
+
+# REST_REGISTRATION = {
+#     'REGISTER_VERIFICATION_URL': 'https://frontend-host/verify-user/',
+#     'RESET_PASSWORD_VERIFICATION_URL': 'https://frontend-host/reset-password/',
+#     'REGISTER_EMAIL_VERIFICATION_URL': 'https://frontend-host/verify-email/',
+
+#     'VERIFICATION_FROM_EMAIL': 'no-reply@example.com',
+# }
 
 ROOT_URLCONF = 'onlinestores.urls'
 
@@ -98,21 +112,21 @@ WSGI_APPLICATION = 'onlinestores.wsgi.application'
 #     )
 # }
 
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-# 'mysql', 'oracle', 'postgresql', 'sqlite3'
-
+# mysql
 # DATABASES = {
 #     'default': {
-#         'ENGINE':'django.db.backends.mysql',
-#         'NAME':'onlinestores',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'Name':'onlinestores',
 #         'USER':'root',
 #         'PASSWORD':'',
-#         'HOST':'127.0.0.1',
-#         'PORT':''
+#         'HOST':'localhost',
+#         'PORT':'3308',
+#         'OPTIONS': {
+#             'init_command':"SET sql_mode='STRICT_TRANS_TABLES'",
+#         },
 #     }
 # }
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
