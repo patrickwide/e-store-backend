@@ -8,8 +8,8 @@ urlpatterns = [
     path("", views.apiOverview.as_view(), name="apiOverview"),
 
     #PRODUCT
-    path("product-list/", views.productList.as_view(), name="productList"),
-    path("product-detail/<str:pk>/", views.productDetail.as_view(), name="productDetail"),
+    path("product-list/shop/<str:shopId>/", views.productList.as_view(), name="productList"),
+    path("product-detail/shop/<str:shopId>/product/<str:pk>/", views.productDetail.as_view(), name="productDetail"),
     path("product-create/<str:pk>/", views.productCreate.as_view(), name="productCreate"),
     path("product-update/<str:pk>/", views.productUpdate.as_view(), name="productUpdate"),
     path("product-delete/<str:pk>/", views.productDelete.as_view(), name="productDelete"),

@@ -4,11 +4,11 @@ from database.models import *
 from django.contrib.auth.models import User
 
 class ProductSerializer(serializers.ModelSerializer):
-    shop = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='shop.shopName')
-    # productOwner = serializers.ReadOnlyField(source='productOwner.username')
+    user = serializers.ReadOnlyField( source='shop.user.username' )
+    shop = serializers.CharField( source='shop.name' )
     name = serializers.CharField( max_length=64 )
     price = serializers.IntegerField( default=0 )
-    category = serializers.CharField( source='productCategory.productCategoryName' )
+    category = serializers.CharField( source='category.name' )
     description = serializers.CharField( max_length=500 )
     photo1 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 ) 
     photo2 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
@@ -16,25 +16,11 @@ class ProductSerializer(serializers.ModelSerializer):
     photo4 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
     photo5 = serializers.FileField( default="/media/pictures/2022/01/08/project-2.jpg" , max_length=255 )
 
-
-    # shop = serializers.ReadOnlyField( source='Shop.name' )
-    # name = serializers.CharField( max_length=64 )
-    # price = serializers.IntegerField()
-    # category = serializers.ReadOnlyField( source='Category.ProductCategory' )
-    # description = serializers.CharField( max_length=500 )
-    # photo1 = serializers.FileField( max_length=255 ) 
-    # photo2 = serializers.FileField( max_length=255 )
-    # photo3 = serializers.FileField( max_length=255 )
-    # photo4 = serializers.FileField( max_length=255 )
-    # photo5 = serializers.FileField( max_length=255 )
-
-
-    # def create(self, validated_data):
-    #     """
-    #     Create and return a new `Product` instance, given the validated data.
-    #     """
-    #     print(validated_data)
-    #     return  Product.objects.create(**validated_data)
+    def create(self, validated_data):
+        """
+        Create and return a new `Product` instance, given the validated data.
+        """
+        return  Product.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         """
@@ -54,8 +40,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id','shop','name','price','category','description','photo1', 'photo2', 'photo3', 'photo4', 'photo5' ]
-
+        # fields = ['id','shop','name','price','category','description','photo1', 'photo2', 'photo3', 'photo4', 'photo5' ]
+        fields = '__all__'
 
 class shopSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField( source='user.username' )

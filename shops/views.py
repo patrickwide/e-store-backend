@@ -53,12 +53,15 @@ class productList(APIView):
     # prevent unauthenticated users from accessing the data
     authentication_classes = [TokenAuthentication,BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    def get(self, req):
+    def get(self, req, shopId ):
         if req.method == "GET":
-            
-            # filter the data and give users data only
-            products = Product.objects.filter(productOwner=req.user)
-            serializer = ProductSerializer(products,many=True)
+
+            # get the users shop
+            shop = get_object_or_404(Shop, id=shopId, user=req.user)
+            # get shop id and get product by shop id
+            products = Product.objects.filter(shop=shop.id)
+            # serialize the data(json)
+            serializer = ProductSerializer(products, many=True)
 
             return Response(data=serializer.data,status=status.HTTP_200_OK)
         else:
@@ -68,11 +71,14 @@ class productDetail(APIView):
     # prevent unauthenticated users from accessing the data
     authentication_classes = [TokenAuthentication,BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    def get(self, req, pk):
+    def get(self, req, shopId, pk):
         if req.method == "GET":
 
+            # get the users shop
+            shop = get_object_or_404(Shop, id=shopId, user=req.user)
+
             # get only data by id and also data that is created by the user
-            product = get_object_or_404(Product,id=pk,productOwner=req.user)
+            product = get_object_or_404(Product,id=pk,shop=shop.id)
             serializer = ProductSerializer(product,many=False)
 
             return Response(data=serializer.data,status=status.HTTP_200_OK)
@@ -140,7 +146,8 @@ class productDelete(APIView):
         if req.method == "DELETE":
 
             product = get_object_or_404(Product,id=pk)
-            # check if user have permission to delete the data
+
+            # check if user have permission to delete the product
             self.check_object_permissions(req, product)
             product.delete()
 
@@ -190,7 +197,7 @@ class shopList(APIView):
         if req.method == 'GET':
 
             # filter the data and give users data only
-            shop = Shop.objects.filter(shopOwner=req.user)
+            shop = Shop.objects.filter(user=req.user)
             serializer = shopSerializer(shop,many=True)
 
             return Response(data=serializer.data,status=status.HTTP_200_OK)
@@ -205,7 +212,7 @@ class shopDetail(APIView):
         if req.method == "GET":
 
             # get only data by id and also data that is created by the user
-            shop = get_object_or_404(Shop,id=pk,shopOwner=req.user)
+            shop = get_object_or_404(Shop,id=pk,user=req.user)
             serializer = shopSerializer(shop,many=False)
 
             return Response(data=serializer.data,status=status.HTTP_200_OK)
@@ -220,7 +227,7 @@ class shopCreate(APIView):
         if req.method == "POST":
             serializer = shopSerializer(data=req.data)
             if serializer.is_valid():
-                serializer.save(shopOwner=req.user)
+                serializer.save(user=req.user)
                 return Response(data={"success":"new shop created","data":serializer.data},status=status.HTTP_200_OK)
             else:
                 return Response(data={"error":"There was an error","data":serializer.data},status=status.HTTP_400_BAD_REQUEST)
@@ -240,7 +247,7 @@ class shopUpdate(APIView):
             serializer = shopSerializer(instance=shop,data=req.data)
 
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(user=req.user)
                 return Response(data={"success":serializer.data},status=status.HTTP_200_OK)
             else:
                 return Response(data={"error":"There was an error","data":serializer.data},status=status.HTTP_400_BAD_REQUEST)
@@ -262,3 +269,4 @@ class shopDelete(APIView):
             return Response(data={"success":f"shop was successfully deleted"},status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+

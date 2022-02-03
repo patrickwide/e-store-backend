@@ -12,7 +12,7 @@ class ProductIsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the productOwner of the product.
-        return obj.productOwner == request.user
+        return obj.shop.user == request.user
 
 class ShopIsOwnerOrReadOnly(permissions.BasePermission):
     """
@@ -26,4 +26,4 @@ class ShopIsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the productOwner of the product.
-        return obj.shopOwner == request.user
+        return obj.user == request.user
